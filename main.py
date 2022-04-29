@@ -71,10 +71,10 @@ def add_comment(pid:int,json_origin:dict,post_path:str)->dict:
 
 def split_pages(file_list:str):
     "从页中分离出pid"
-    for fp in os.listdir(file_list):
+    for fp in file_list:
         json_temp = {"code":0,"data":{}}
         try:
-            with open(fp,'r')as f:
+            with open(fp,'r',encoding='utf-8')as f:
                 json_page = json.load(f)
             for json_to_add in json_page["data"]:
                 json_temp['data']=json_to_add
@@ -97,7 +97,9 @@ def main():
     renew_list = update_list(args.update)#
     cur_dir = os.path.join(UPDATE_PATH,"%s-%s-%s-%s-%s-%s"%time.localtime(time.time())[:6])
     crawl(renew_list,cur_dir)
+    file_list = []
     for fn in os.listdir(cur_dir):
-        split_pages(os.path.join(cur_dir,fn))
+        file_list.append(os.path.join(cur_dir,fn))
+    split_pages(file_list)
 if __name__ == "__main__":
     main()
