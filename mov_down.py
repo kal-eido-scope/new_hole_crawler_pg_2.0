@@ -107,9 +107,13 @@ def main():
     f = open (ERROR_MOV_PATH,'w+')     #打开错误日志写入状态
     try:
         for pid in tqdm(range(start_id,end_id), desc='Movies'):
-            mov_dict = find_mov(pid)
-            status_num = get_mov(pid,mov_dict,data_json)
-            tqdm.write(f'pid:{pid},Status:{STATUS_MESSAGE[status_num]}')
+            try:
+                mov_dict = find_mov(pid)
+                status_num = get_mov(pid,mov_dict,data_json)
+                tqdm.write(f'pid:{pid},Status:{STATUS_MESSAGE[status_num]}')
+            except:
+                tqdm.write('%d no exist'%pid)
+                continue
         json.dump(data_json,f)
     except:
         json.dump(data_json,f)      #意外恢复
