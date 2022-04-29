@@ -115,7 +115,7 @@ def main():
             try:
                 status_num = get_img(pid,data_json)
                 tqdm.write(f'pid:{pid},Status:{STATUS_MESSAGE[status_num]}')
-            except e as Exception:
+            except Exception as e:
                 tqdm.write('%d no exist'%pid)
                 continue
         json.dump(data_json,f)
