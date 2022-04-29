@@ -6,8 +6,11 @@ HEADERS = {'User-Token': TOKEN}
 PROXY = {'http':'123.56.231.232'}
 
 DATA_PATH = os.path.join(os.path.dirname(__file__), 'data')
+os.makedirs(DATA_PATH,exist_ok=True)    
 JSON_PATH = os.path.join(DATA_PATH, 'json')
+os.makedirs(JSON_PATH,exist_ok=True)
 UPDATE_PATH = os.path.join(DATA_PATH, 'update')
+os.makedirs(UPDATE_PATH,exist_ok=True)
 
 def update_list(reflag:bool)->list:
     "确认爬取页码，返回全部页码或最新SPACE页"
