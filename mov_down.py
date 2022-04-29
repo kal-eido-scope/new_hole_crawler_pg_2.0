@@ -5,6 +5,7 @@ from urllib.request import urlretrieve
 from funcs import DATA_PATH,LOG_PATH,JSON_PATH,SPACE,get_max_pid,get_cur_pid,scan_mode
 
 MOV_PATH = os.path.join(DATA_PATH,'mov')
+os.makedirs(MOV_PATH,exist_ok=True)
 MOV_PID_LIST = os.listdir(MOV_PATH)
 ERROR_MOV_PATH = os.path.join(LOG_PATH,'error_mov.json')
 
