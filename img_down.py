@@ -10,6 +10,7 @@ from tqdm import tqdm
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 IMG_PATH = os.path.join(DATA_PATH,'img')        #img文件夹相对路径
+os.makedirs(IMG_PATH,exist_ok=True)
 IMG_PID_LIST = os.listdir(IMG_PATH)             #img文件夹下pid的list
 ERROR_IMG_PATH = os.path.join(LOG_PATH,'error_img.json')   #img下载错误日志路径
 STATUS_MESSAGE = ['No img','Success','Error']
