@@ -97,7 +97,7 @@ def main():
     renew_list = update_list(args.update)#
     cur_dir = os.path.join(UPDATE_PATH,"%s-%s-%s-%s-%s-%s"%time.localtime(time.time())[:6])
     crawl(renew_list,cur_dir)
-    #for fn in os.listdir(cur_dir):
-        #split_pages(os.path.join(cur_dir,fn))
+    for fn in os.listdir(cur_dir):
+        split_pages(os.path.join(cur_dir,fn))
 if __name__ == "__main__":
     main()
