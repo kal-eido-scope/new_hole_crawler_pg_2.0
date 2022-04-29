@@ -112,8 +112,12 @@ def main():
     f = open (ERROR_IMG_PATH,'w+')     #打开错误日志写入状态
     try:
         for pid in tqdm(range(start_id,end_id), desc='Images'):
-            status_num = get_img(pid,data_json)
-            tqdm.write(f'pid:{pid},Status:{STATUS_MESSAGE[status_num]}')
+            try:
+                status_num = get_img(pid,data_json)
+                tqdm.write(f'pid:{pid},Status:{STATUS_MESSAGE[status_num]}')
+            except e as Exception:
+                tqdm.write('%d no exist'%pid)
+                continue
         json.dump(data_json,f)
     except Exception as e:
         json.dump(data_json,f)      #意外恢复
