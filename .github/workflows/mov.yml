@@ -1,4 +1,4 @@
-name : Download imgs and movs
+name : Download movs
 on :
   workflow_dispatch:
     
