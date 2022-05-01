@@ -22,7 +22,7 @@ jobs:
 
     - name: crawl_img
       run: |
-        python img_down.py --start 1 --end 25000
+        python img_down.py --start 1
     
 
     - name: Get Time
