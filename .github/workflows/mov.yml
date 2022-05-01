@@ -22,7 +22,7 @@ jobs:
 
     - name: crawl_mov
       run: |
-        python mov_down.py --start 1
+        python mov_down.py --start 1 --end 27000
     
 
     - name: Get Time
