@@ -19,13 +19,11 @@ jobs:
         pip install requests
         pip install argparse
         pip install tqdm
-        git lfs install
 
     - name: crawl_mov
       run: |
-        python mov_down.py --start 27000 --end 27003
+        python mov_down.py --start 1
     
-
     - name: Get Time
       id : time
       uses: josStorer/get-current-time@v2.0.0
@@ -36,7 +34,6 @@ jobs:
       run: |
         git config --global user.email 1978633500@qq.com
         git config --global user.name kaleidoscope
-        git lfs track 'data/mov/27002/5mgdks.mp4'
         git add .
         git commit -m "Crawl_${{steps.time.outputs.readableTime}}"
 
