@@ -48,12 +48,41 @@ def get_comment(pid:int)->list:
         return {}
     else:
         return w
+        
+def comment_process(comment:dict,cur_comments:list)->list:
+    flag = True
+    for cur_comment in cur_comments:
+        if comment['timestamp'] == cur_comment['timestamp']:
+            if comment['text'] == cur_comment['text']:
+                if comment['name_id'] == cur_comment['name_id']:
+                    if comment.get('pid'):
+                        flag = False#if comment.get('pid'):  #判断新旧版本标准，存在则采用新版本
+                        break
+    if not flag:#旧的有新的没有，加，旧的有新的有跳过；旧的没有新的有跳过
+        new_version = {
+                "author_title": comment['author_title'],
+                "blocked": comment['blocked'],
+                "blocked_count": 0,
+                "can_del": comment['can_del'],
+                "cid": -1,
+                "create_time": comment['timestamp'],
+                "is_blocked": False,
+                "is_tmp": False,
+                "name_id": comment['name_id'],
+                "text": comment['text'],
+                "timestamp": comment['timestamp']
+            }
+        cur_comments.append(new_version)
+        print('one old comment has been modified and added')
+    return cur_comments
 
 def add_comment(pid:int,json_origin:dict,post_path:str)->dict:
     json_temp = copy.deepcopy(json_origin)
     comments_req = get_comment(pid)
     if comments_req:
         comments = comments_req['data']
+    else:
+        comments = []
     if not os.path.exists(post_path):
         if json_temp['data']['comments'] is None and json_temp['data']['n_comments']>0:
             if comments:#comment请求有回复则输入
@@ -66,10 +95,8 @@ def add_comment(pid:int,json_origin:dict,post_path:str)->dict:
             past_version = json.load(f)
         if past_version['data']['comments']:
             for comment in past_version['data']['comments']:
-                if comment not in cur_comments:
-                    cur_comments.append(comment)
-        else:
-            json_temp['data']['comments'] = cur_comments
+                comment_process(comment,cur_comments)
+        json_temp['data']['comments'] = cur_comments
     return json_temp
 
 def split_pages(file_list:str):
@@ -87,8 +114,10 @@ def split_pages(file_list:str):
                 with open(id_path,'wb+') as f:
                     f.write(json.dumps(json_2,ensure_ascii=False).encode('utf-8'))
                 print('%d successed'%pid)
-        except:
-            continue
+        except Exception as e:
+            print(e)
+            print(e.__traceback__.tb_frame.f_globals["__file__"])
+            print(e.__traceback__.tb_lineno)
 
 def main():
     parser = argparse.ArgumentParser('New T-Hole Crawler by pages')
