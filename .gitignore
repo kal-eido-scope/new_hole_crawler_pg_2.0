@@ -130,3 +130,10 @@ dmypy.json
 
 # Vscode
 /.vscode
+
+#Compile
+top_30+.json
+top_comment_30+.json
+read_version.txt
+read_version_comment.txt
+try.py
