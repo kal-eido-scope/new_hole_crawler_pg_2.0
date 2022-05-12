@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Vscode
+# VScode
 /.vscode
 
 #Compile
@@ -137,3 +137,6 @@ top_comment_30+.json
 read_version.txt
 read_version_comment.txt
 try.py
+
+# TEMP
+/data/update
