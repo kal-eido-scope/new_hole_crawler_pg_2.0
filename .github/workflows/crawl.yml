@@ -21,6 +21,7 @@ jobs:
         pip install requests
         pip install argparse
         pip install tqdm
+        pip install func_timeout
 
     - name: crawl_json
       run: |

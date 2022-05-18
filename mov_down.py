@@ -3,6 +3,8 @@ from tqdm import tqdm
 from urllib import parse
 from urllib.request import urlretrieve
 from funcs import DATA_PATH,LOG_PATH,JSON_PATH,SPACE,get_max_pid,get_cur_pid,scan_mode
+import func_timeout
+from func_timeout import func_set_timeout
 
 MOV_PATH = os.path.join(DATA_PATH,'mov')
 os.makedirs(MOV_PATH,exist_ok=True)
@@ -12,6 +14,10 @@ ERROR_MOV_PATH = os.path.join(LOG_PATH,'error_mov.json')
 MOV_EXTS = ('mov','mp4')
 
 STATUS_MESSAGE = ['No mov','Success','Error']
+
+@func_set_timeout(1800) #30min
+def url_down(url,mov_path):
+    urlretrieve(url,mov_path)
 
 def write_error(pid:int,url:str,e:Exception,data_json:dict,):
     if data_json.get(pid):
@@ -62,7 +68,7 @@ def get_mov(pid:int,urls:dict,data_json:dict):
                 print('%d\tmovie skipped'%pid)
                 continue
             try:
-                urlretrieve(url,mov_path)
+                url_down(url,mov_path)
                 print('%d\tA movie dowloaded.'%pid)
                 status_num = 1
             except Exception as e:
