@@ -132,6 +132,7 @@ def main():
     os.makedirs(UPDATE_PATH,exist_ok=True)
     renew_list = update_list(args.update)#
     cur_dir = os.path.join(UPDATE_PATH,"%s-%s-%s-%s-%s-%s"%time.localtime(time.time())[:6])
+    os.makedirs(cur_dir,exist_ok=True)
     crawl(renew_list,cur_dir)
     file_list = []
     for fn in os.listdir(cur_dir):
