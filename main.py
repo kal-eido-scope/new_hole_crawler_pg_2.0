@@ -12,12 +12,16 @@ os.makedirs(JSON_PATH,exist_ok=True)
 UPDATE_PATH = os.path.join(DATA_PATH, 'update')
 os.makedirs(UPDATE_PATH,exist_ok=True)
 
-def update_list(reflag:bool)->list:
+def update_list(reflag:int)->list:
     "确认爬取页码，返回全部页码或最新SPACE页"
     if reflag==1:
         return range(1,SPACE+1)
-    else:
+    elif reflag == 10:
         return range(1,10000)
+    elif reflag == 2:
+        return range(0,1000)
+    elif reflag == 3:
+        return range(1000,10000)
 
 def crawl(page_list:list,to_dir:str)->None:
     "爬取相应列表内的页码至to_str文件夹下"
