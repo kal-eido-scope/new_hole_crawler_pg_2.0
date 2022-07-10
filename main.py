@@ -19,9 +19,9 @@ def update_list(reflag:int)->list:
     elif reflag == 10:
         return range(1,10000)
     elif reflag == 2:
-        return range(0,2000)
+        return range(0,4000)
     elif reflag == 3:
-        return range(2000,10000)
+        return range(4000,10000)
 
 def crawl(page_list:list,to_dir:str)->None:
     "爬取相应列表内的页码至to_str文件夹下"
