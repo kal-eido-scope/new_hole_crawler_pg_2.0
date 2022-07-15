@@ -2,7 +2,7 @@ name : Crawl New hole by pages
 on :
   workflow_dispatch:
   schedule:
-    - cron : '0 4/6 * * *'
+    - cron : '0 4/6 0 0 0'
     
 jobs:
   crawling:
