@@ -19,7 +19,7 @@ def update_list(reflag:int)->list:
     elif reflag == 10:
         return range(1,10000)
     elif reflag == 2:
-        return range(0,4000)
+        return range(1,4000)
     elif reflag == 3:
         return range(4000,10000)
 
