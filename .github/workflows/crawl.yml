@@ -26,14 +26,6 @@ jobs:
     - name: crawl_json
       run: |
         python main.py --update 2
-    
-    - name: crawl_img
-      run: |
-        python img_down.py --start 1
-    
-    - name: crawl_mov
-      run: |
-        python mov_down.py --start 1
 
     - name: Get Time
       id : time
