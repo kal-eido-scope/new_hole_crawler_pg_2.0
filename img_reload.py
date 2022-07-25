@@ -14,12 +14,17 @@ def reload_image(error_img_log:dict):
         new_values = []
         os.makedirs(os.path.join(IMG_PATH,'%0d'%pid), exist_ok=True)
         for value in values:
-            img = list(value)[0]
+            img = value.keys()[0]
+            hole_url = value[img]['hole_url']
             flag = True
             img_path = get_format_path(img,pid)
             try:
-                img_get = requests.get(img,verify=False)
-                status_code = img_get.status_code
+                try:
+                    img_get = requests.get(img,verify=False,timeout=240)
+                    status_code = img_get.status_code
+                except:
+                    img_get = requests.get(hole_url,verify=False,timeout=240)
+                    status_code = img_get.status_code
             except:
                     status_code = 404
             if status_code == 200:
@@ -28,7 +33,7 @@ def reload_image(error_img_log:dict):
                 print('%d\tAn img dowloaded.'%pid)
             else:
                 flag = False
-                new_values.append({list(value)[0]:status_code})
+                new_values.append({img:{'hole_url':hole_url,'status_code':status_code}})
                 print('%d\tAn img failed.'%pid)
         if flag:
             error_img_log.pop(pid_str)
@@ -37,22 +42,26 @@ def reload_image(error_img_log:dict):
             error_img_log[pid_str] = new_values
             print('%d\tSome img(s) failed to be downloaded.'%pid)
         
-def recover_url(fn:str,imgs):
-    for img in imgs:
-        if fn in img:
-            return img
-    return ''
+def recover_url(fn:str,imgs:dict):
+    for url in imgs.keys():
+        if fn in url:
+            return (url,imgs[url](0))
+    return '',''
             
 def reload_url(error_imgs):
     for pid_str,fns in copy.deepcopy(error_imgs).items():
         pid = int(pid_str)
         imgs = re_find(pid)
         for fn in fns:
-            url = recover_url(fn,imgs)
+            url,hole_url = recover_url(fn,imgs)
             img_path = get_format_path(url,pid)
             try:
-                img_get = requests.get(url,verify=False)
-                status_code = img_get.status_code
+                try:
+                    img_get = requests.get(url,verify=False)
+                    status_code = img_get.status_code
+                except:
+                    img_get = requests.get(hole_url,verify=False)
+                    status_code = img_get.status_code
             except:
                     status_code = 404
             if status_code == 200:

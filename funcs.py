@@ -192,13 +192,13 @@ def get_cur_pid()->int:
 def get_max_pid()->int:
     """获取最新id"""
     GET_PAGE = API_ROOT + '/getlist?p=1&order_mode=0'
-    headers = {'User-Token': TOKEN}
-    r = requests.get(GET_PAGE,headers=headers)
+    r = requests.get(GET_PAGE,headers=HEADERS)
     max_pid = r.json()['data'][0]['pid']
-    if type(max_pid)==int:
-        return max_pid
-    else:
-        return 100000    #暂定意外100000
+    try:
+        max_pid = r.json()['data'][0]['pid']
+        return int(max_pid)
+    except:
+        return 100000
 
 def process_start_end(start:int,end:int,mp:int)->tuple:
     """返回开始项和结束项"""
@@ -223,14 +223,15 @@ def scan_mode(mp:int,scan_mode:int)->tuple:
     if scan_mode == 1:
         return (mp-SPACE,mp)
     elif scan_mode == 2:
-        SCAN_PID = os.path.join(LOG_PATH,'scan_pid.txt')
-        with open(SCAN_PID,'w+')as f:
-            last_scan = int(f.read())
-            if last_scan+SPACE >= mp:
-                f.write(1)
-            else:
-                f.write(last_scan+SPACE)
-        return process_start_end(last_scan,last_scan+SPACE,mp)
+        with open(os.path.join(LOG_PATH,'log.json'),'r')as f:
+            dat = json.load(f)
+        crawl_last = dat['crawl_last']
+        return process_start_end(crawl_last,mp,mp)
+    elif scan_mode == 3:
+        with open(os.path.join(LOG_PATH,'log.json'),'r')as f:
+            dat = json.load(f)
+        crawl_last = dat['crawl_last']
+        return process_start_end(1,crawl_last+1,mp)
     else:
         return process_start_end(None,None,mp)
 
@@ -242,7 +243,8 @@ def main():
     parser.add_argument('--scan', type=int , help='Scan Mode') #, required=True
     args = parser.parse_args()
     s = requests.Session()
-    max_pid = get_max_pid()    #获取最新id
+    #max_pid = get_max_pid()    #获取最新id
+    max_pid = 86554
     try:
         with open (ERROR_JSON_PATH,'r') as f:
             data_json = json.load(f)    #载入错误列表

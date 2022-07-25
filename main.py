@@ -1,4 +1,5 @@
 import requests,json,os,time,argparse,copy,time
+from funcs import get_max_pid
 API_ROOT = 'https://t-hole.red/_api/v1/'
 SPACE = 5
 TOKEN = '39fzRQwSVvkB3x1P'
@@ -11,6 +12,8 @@ JSON_PATH = os.path.join(DATA_PATH, 'json')
 os.makedirs(JSON_PATH,exist_ok=True)
 UPDATE_PATH = os.path.join(DATA_PATH, 'update')
 os.makedirs(UPDATE_PATH,exist_ok=True)
+LOG_PATH = os.path.join(DATA_PATH,'log')
+os.makedirs(LOG_PATH,exist_ok=True)
 
 def update_list(reflag:int)->list:
     "确认爬取页码，返回全部页码或最新SPACE页"
@@ -19,9 +22,23 @@ def update_list(reflag:int)->list:
     elif reflag == 10:
         return range(1,10000)
     elif reflag == 2:
-        return range(1,2000)
+        mp = get_max_pid()
+        temp = int((mp/25)*(2/5))
+        l = mp - (temp *25)
+        dat = {'max_last':mp,'crawl_last':l}
+        print(f'max_pid:{mp},crawl:{l}')
+        with open(os.path.join(LOG_PATH,'log.json'),'wb+')as f:
+            f.write(json.dumps(dat,ensure_ascii=False).encode('utf-8'))
+        return range(1,temp)
     elif reflag == 3:
-        return range(2000,10000)
+        with open(os.path.join(LOG_PATH,'log.json'),'r')as f:
+            dat = json.load(f)
+        mp = get_max_pid()
+        crawl_last = dat['crawl_last']
+        temp = (mp-crawl_last)/25+1
+        return range(temp,100000)
+    elif reflag == 4:
+        return range(1,100000)
 
 def crawl(page_list:list,to_dir:str)->None:
     "爬取相应列表内的页码至to_str文件夹下"

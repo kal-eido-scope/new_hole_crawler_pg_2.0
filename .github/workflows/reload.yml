@@ -1,11 +1,9 @@
-name : Crawl New hole by pages (part I)
+name : Reloading images and movies
 on :
   workflow_dispatch:
-  schedule:
-    - cron : '0 0,8,16 * * *'
     
 jobs:
-  crawling:
+  image_confirm:
     runs-on: ubuntu-latest
     steps:
     - name: check out repository
@@ -19,21 +17,17 @@ jobs:
     - name: requirements
       run: |
         pip install requests
-        pip install argparse
         pip install tqdm
+        pip install argparse
         pip install func_timeout
 
-    - name: crawl_json
+    - name: img_confirm
       run: |
-        python main.py --update 2
-
-    - name: crawl_img
+          python img_confirm.py
+          
+    - name: img_reload
       run: |
-        python img_down.py --scan 2
-    
-    - name: crawl_mov
-      run: |
-        python mov_down.py --scan 2
+          python img_reload.py --d True --e True
 
     - name: Get Time
       id : time
@@ -46,8 +40,8 @@ jobs:
         git config --global user.email 1978633500@qq.com
         git config --global user.name kaleidoscope
         git add .
-        git commit -m "Crawl_${{steps.time.outputs.readableTime}}"
-
+        git commit -m "Reload_${{steps.time.outputs.readableTime}}"
+     
     - name: git_push
       uses: ad-m/github-push-action@master
       with: 

@@ -16,36 +16,48 @@ MOV_EXTS = ('mov','mp4')
 STATUS_MESSAGE = ['No mov','Success','Error']
 
 @func_set_timeout(1800) #30min
-def url_down(url,mov_path):
-    urlretrieve(url,mov_path)
+def url_down(url,hole_url,mov_path):
+    try:
+        urlretrieve(url,mov_path)
+    except:
+        urlretrieve(hole_url,mov_path)
 
-def write_error(pid:int,url:str,e:Exception,data_json:dict,):
+def write_error(pid:int,url:str,hole_url:str,e:Exception,data_json:dict,):
     if data_json.get(pid):
-        data_json[pid].append({url:e.__str__()})
+        data_json[pid].append({url:{'hole_url':hole_url,'error':e.__str__()}})
     else:
-        data_json[pid]=[{url:e.__str__()}]
+        data_json[pid]=[{url:{'hole_url':hole_url,'error':e.__str__()}}]
 
-def get_type(urls:list)->dict:
+def find_mov_url(text:str)->dict:
+    "增加对ipfs的处理"
     results = {}
-    for url in urls:
-        par =parse.urlparse(url[0])  #修改re匹配pattern对应此处
+    pattern1 = '((?:https|http|ftp|file):\/\/[-\w+&@#\/%?=~_|!:,.;]+(?:.*?|.*?mov|.*?mp4))'
+    l0 = re.findall(pattern1,text)
+    for x in l0:
+        par = parse.urlparse(x)
         for ext in MOV_EXTS:
             if par.query.endswith(ext) or par.path.endswith(ext):
-                results[url[0]]=ext
+                results[x]=('',ext)
                 break
+    pattern2 = '((?:https|http|ftp|file):\/\/[-\w+&@#\/%?=~_|!:,.;]+(?:.*?mov|.*?mp4))(?=\s\[加载失败请点击此\]\((.*?)\))'
+    l_remove = re.findall(pattern2,text)
+    for x,y in l_remove:
+        hole_url,ext = results.get(x)
+        if ext:
+            results[x] = (y,ext)
     return results
 
 def find_mov(pid:int)->dict:
+    movs = {}
     post_path = os.path.join(JSON_PATH,'%06d.json'%pid)
     with open(post_path,'r',encoding='utf-8') as f:
         p = json.load(f)
-    regular = re.compile(r'((https|ftp|file):\/\/[-A-Za-z0-9+&@#\/%?=~_|!:,.;]+[-A-Za-z0-9+&@#\/%=~_|])')
-    urls = re.findall(regular,p['data']['text'])
+    dic_text = find_mov_url(p['data']['text'])
+    movs = dic_text
     if p['data']['comments']:
         for comment_dict in p['data']['comments']:
-            urls.extend(re.findall(regular,comment_dict['text']))
-    results = get_type(urls)
-    return results
+            movs = dict(movs,**find_mov_url(comment_dict['text']))
+    return movs
 
 def format_mov_name(url:str,ext:str)->str:
     if url.endswith('.'+ext):
@@ -61,18 +73,20 @@ def get_mov(pid:int,urls:dict,data_json:dict):
     status_num = 0
     if urls:
         os.makedirs(os.path.join(MOV_PATH,'%0d'%pid), exist_ok=True)
-        for url,ext in urls.items():
+        for url,value in urls.items():
+            ext = value[-1]
+            hole_url = value[0]
             url_name = format_mov_name(url,ext)
             mov_path = os.path.join(MOV_PATH,'%0d'%pid,url_name)
             if os.path.exists(mov_path):
                 print('%d\tmovie skipped'%pid)
                 continue
             try:
-                url_down(url,mov_path)
+                url_down(url,hole_url,mov_path)
                 print('%d\tA movie dowloaded.'%pid)
                 status_num = 1
             except Exception as e:
-                write_error(pid,url,e,data_json)
+                write_error(pid,url,hole_url,e,data_json)
                 print('%d\tA movie failed.'%pid)
                 status_num = 2
     return status_num

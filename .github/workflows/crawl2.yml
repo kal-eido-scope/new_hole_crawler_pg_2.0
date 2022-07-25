@@ -29,11 +29,11 @@ jobs:
     
     - name: crawl_img
       run: |
-        python img_down.py --start 1
+        python img_down.py --scan 3
     
     - name: crawl_mov
       run: |
-        python mov_down.py --start 1
+        python mov_down.py --scan 3
 
     - name: Get Time
       id : time
