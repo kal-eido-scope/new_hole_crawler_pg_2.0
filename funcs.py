@@ -11,7 +11,7 @@ JSON_PATH = os.path.join(DATA_PATH,'json')                  #json文件夹路径
 JSON_PID_LIST = os.listdir(JSON_PATH)                       #json文件夹下pid.json的list
 LOG_PATH = os.path.join(DATA_PATH,'log')                    #log文件夹路径
 ERROR_JSON_PATH = os.path.join(LOG_PATH,'error_json.json')  #json错误日志路径
-NOT_AN_IMG_PATH = os.path.join(LOG_PATH,'not_an_image.json')
+NOT_AN_IMAGE_PATH = os.path.join(LOG_PATH,'not_an_image.json')
 
 API_ROOT = 'https://t-hole.red/_api/v1/'
 SPACE = 1200
