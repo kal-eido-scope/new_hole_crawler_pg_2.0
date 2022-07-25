@@ -27,7 +27,7 @@ jobs:
           
     - name: img_reload
       run: |
-          python img_reload.py --d True --e True
+          python img_reload.py --e True
 
     - name: Get Time
       id : time

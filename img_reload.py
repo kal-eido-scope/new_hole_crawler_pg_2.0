@@ -14,7 +14,7 @@ def reload_image(error_img_log:dict):
         new_values = []
         os.makedirs(os.path.join(IMG_PATH,'%0d'%pid), exist_ok=True)
         for value in values:
-            img = value.keys()[0]
+            img = list(value.keys())[0]
             hole_url = value[img]['hole_url']
             flag = True
             img_path = get_format_path(img,pid)
@@ -43,18 +43,19 @@ def reload_image(error_img_log:dict):
             print('%d\tSome img(s) failed to be downloaded.'%pid)
         
 def recover_url(fn:str,imgs:dict):
+    fn_i = os.path.splitext(fn)[0]
     for url in imgs.keys():
-        if fn in url:
-            return (url,imgs[url](0))
-    return '',''
+        if fn_i in url:
+            return (url,imgs[url][0],imgs[url][1])
+    return '','',''
             
 def reload_url(error_imgs):
     for pid_str,fns in copy.deepcopy(error_imgs).items():
         pid = int(pid_str)
         imgs = re_find(pid)
         for fn in fns:
-            url,hole_url = recover_url(fn,imgs)
-            img_path = get_format_path(url,pid)
+            url,hole_url,ext = recover_url(fn,imgs)
+            img_path = get_format_path(url,ext,pid)
             try:
                 try:
                     img_get = requests.get(url,verify=False)
