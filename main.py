@@ -35,7 +35,7 @@ def update_list(reflag:int)->list:
             dat = json.load(f)
         mp = get_max_pid()
         crawl_last = dat['crawl_last']
-        temp = (mp-crawl_last)/25+1
+        temp = int((mp-crawl_last)/25)+1
         return range(temp,100000)
     elif reflag == 4:
         return range(1,100000)
