@@ -1,7 +1,9 @@
 name : Download movs
 on :
   workflow_dispatch:
-    
+  schedule:
+    - cron : '0 12 * * *'
+
 jobs:
   crawling:
     runs-on: ubuntu-latest

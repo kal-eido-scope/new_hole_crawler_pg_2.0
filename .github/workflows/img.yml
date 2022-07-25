@@ -1,7 +1,9 @@
 name : Download imgs
 on :
   workflow_dispatch:
-    
+  schedule:
+    - cron : '0 0 * * *'
+
 jobs:
   crawling:
     runs-on: ubuntu-latest
@@ -22,7 +24,7 @@ jobs:
 
     - name: crawl_img
       run: |
-        python img_down.py --start 1
+        python img_down.py --scan 2
     
 
     - name: Get Time

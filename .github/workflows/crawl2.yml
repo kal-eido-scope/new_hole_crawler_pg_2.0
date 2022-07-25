@@ -2,7 +2,7 @@ name : Crawl New hole by pages (part II)
 on :
   workflow_dispatch:
   schedule:
-    - cron : '0 4,12,20 * * *'
+    - cron : '0 20 * * *'
     
 jobs:
   crawling:
@@ -26,14 +26,6 @@ jobs:
     - name: crawl_json
       run: |
         python main.py --update 3
-    
-    - name: crawl_img
-      run: |
-        python img_down.py --scan 3
-    
-    - name: crawl_mov
-      run: |
-        python mov_down.py --scan 3
 
     - name: Get Time
       id : time
