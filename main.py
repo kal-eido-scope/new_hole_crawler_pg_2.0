@@ -23,7 +23,7 @@ def update_list(reflag:int)->list:
         return range(1,10000)
     elif reflag == 2:
         mp = get_max_pid()
-        temp = int((mp/25)*(2/5))
+        temp = int((mp/25)*(1/2))
         l = mp - (temp *25)
         dat = {'max_last':mp,'crawl_last':l}
         print(f'max_pid:{mp},crawl:{l}')
