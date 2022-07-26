@@ -1,8 +1,8 @@
-name : Download imgs
+name : Download imgs (II)
 on :
   workflow_dispatch:
   schedule:
-    - cron : '0 6 * * *'
+    - cron : '0 8 * * *'
 
 jobs:
   crawling:
