@@ -1,4 +1,4 @@
-name : Download imgs
+name : Download imgs (II)
 on :
   workflow_dispatch:
   schedule:
