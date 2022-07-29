@@ -2,7 +2,7 @@ name : Download imgs (I)
 on :
   workflow_dispatch:
   schedule:
-    - cron : '0 1 * * *'
+    - cron : '0 2 * * *'
 
 jobs:
   crawling:
@@ -24,7 +24,7 @@ jobs:
 
     - name: crawl_img
       run: |
-        python img_down.py --scan 2
+        python img_down.py --scan 4
     
 
     - name: Get Time
