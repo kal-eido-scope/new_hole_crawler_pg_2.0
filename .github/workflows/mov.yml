@@ -1,6 +1,6 @@
 name : Download movs
 on :
-
+  workflow_dispatch:
 jobs:
   crawling:
     runs-on: ubuntu-latest
