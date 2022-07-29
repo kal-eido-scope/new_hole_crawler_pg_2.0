@@ -233,6 +233,8 @@ def scan_mode(mp:int,scan_mode:int)->tuple:
             dat = json.load(f)
         crawl_last = dat['crawl_last']
         return process_start_end(1,crawl_last+1,mp)
+    elif scan_mode == 4:
+        return process_start_end(1,mp,mp)
     else:
         return process_start_end(None,None,mp)
 
