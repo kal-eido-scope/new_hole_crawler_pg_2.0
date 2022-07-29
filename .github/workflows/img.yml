@@ -1,4 +1,4 @@
-name : Download imgs (I)
+name : Download imgs and movs
 on :
   workflow_dispatch:
   schedule:
@@ -24,8 +24,11 @@ jobs:
 
     - name: crawl_img
       run: |
-        python img_down.py --scan 4
+        python img_down.py --start 1
     
+    - name: crawl_mov
+      run: |
+        python mov_down.py --start 1
 
     - name: Get Time
       id : time
